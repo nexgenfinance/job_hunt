@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>UAE Finance Jobs</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --sand:#faf7f2; --cream:#f3ede3; --ww:#fffcf8;
+  --ink:#1c1a17; --ink-l:#4a4640; --ink-m:#8a857e;
+  --gold:#c9922a; --gold-l:#f5e6c8; --gold-m:#e8c97a;
+  --blue:#1a5276; --blue-l:#d6e8f5;
+  --green:#1a6644; --green-l:#d4edde;
+  --purple:#5c3580; --purple-l:#f0e8fa;
+  --teal:#1a6b6b; --teal-l:#d4f0ef;
+  --red:#c0392b; --red-l:#fde8e8;
+  --border:#e4ddd4;
+  --shadow:0 2px 16px rgba(28,26,23,0.07);
+  --shadow2:0 8px 32px rgba(28,26,23,0.13);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow-x:hidden;}
+body{background:var(--sand);color:var(--ink);font-family:'Nunito',sans-serif;min-height:100vh;padding-bottom:70px;}
+
+/* ── API KEY BANNER ── */
+.api-banner{background:#1c1a17;padding:12px 16px;display:flex;flex-direction:column;gap:10px;align-items:stretch;}
+.api-banner.hidden{display:none;}
+.api-banner-label{color:#f5e6c8;font-size:13px;font-weight:700;text-align:center;}
+.api-banner-row{display:flex;gap:8px;}
+.api-banner-input{flex:1;padding:10px 14px;border-radius:10px;border:1.5px solid var(--gold);background:#2a2724;color:#faf7f2;font-size:13px;font-family:'Nunito',sans-serif;outline:none;}
+.api-banner-btn{padding:10px 16px;border-radius:10px;border:none;background:var(--gold);color:#fff;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'Nunito',sans-serif;}
+.api-saved{color:#a8d5bc;font-size:12px;text-align:center;display:none;}
+
+/* ── HEADER ── */
+.header{background:var(--ww);border-bottom:2px solid var(--gold-m);padding:12px 16px 0;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(201,146,42,0.08);}
+.header-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#a0721e);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.header-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:var(--ink);}
+.header-title span{color:var(--gold);}
+.header-sub{color:var(--ink-m);font-size:10px;font-weight:600;margin-top:1px;}
+.top-nav{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
+.top-nav::-webkit-scrollbar{display:none;}
+.top-nav-btn{padding:9px 14px;border:none;background:transparent;color:var(--ink-m);font-size:12px;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;font-family:'Nunito',sans-serif;flex-shrink:0;}
+.top-nav-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ── ROLE TABS ── */
+.role-bar{background:var(--cream);border-bottom:1px solid var(--border);padding:8px 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;align-items:center;}
+.role-bar::-webkit-scrollbar{display:none;}
+.role-tab{padding:7px 14px;border-radius:50px;border:1.5px solid var(--border);background:var(--ww);color:var(--ink-l);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:'Nunito',sans-serif;}
+.role-tab.active{background:var(--gold);border-color:var(--gold);color:#fff;}
+.refresh-btn{margin-left:auto;flex-shrink:0;padding:7px 14px;border-radius:50px;border:1.5px solid var(--blue);background:var(--blue-l);color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;}
+.refresh-btn:disabled{opacity:0.4;}
+
+/* ── SOURCES ── */
+.sources-bar{background:var(--sand);border-bottom:1px solid var(--border);padding:6px 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;align-items:center;}
+.sources-bar::-webkit-scrollbar{display:none;}
+.src-label{color:var(--ink-m);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap;flex-shrink:0;}
+.src-pill{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+
+/* ── MAIN ── */
+.main{max-width:700px;margin:0 auto;padding:16px;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── STATUS ── */
+.status-bar{padding:9px 14px;border-radius:10px;background:var(--green-l);border:1px solid #a8d5bc;color:var(--green);font-size:12px;font-weight:600;margin-bottom:14px;}
+
+/* ── LOADING ── */
+.loading{text-align:center;padding:50px 0;}
+.spinner{width:36px;height:36px;border-radius:50%;border:3px solid var(--gold-l);border-top:3px solid var(--gold);animation:spin 0.8s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{color:var(--ink-l);font-weight:600;font-size:14px;}
+.loading-sub{color:var(--ink-m);font-size:12px;margin-top:4px;}
+
+/* ── ERROR ── */
+.error-box{padding:20px;border-radius:14px;background:var(--red-l);border:1px solid #f5c6c2;text-align:center;color:var(--red);}
+.error-msg{font-size:11px;display:block;margin:6px 0;padding:6px 10px;background:rgba(0,0,0,0.05);border-radius:6px;word-break:break-all;text-align:left;}
+.retry-btn{margin-top:10px;padding:8px 20px;border-radius:8px;background:var(--red);color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;}
+
+/* ── JOB CARDS ── */
+.jobs-list{display:flex;flex-direction:column;gap:10px;}
+.job-card{background:var(--ww);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:border-color 0.2s;}
+.job-card.open{border-color:var(--gold-m);}
+.job-card-head{padding:14px 16px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;}
+.job-card-head-left{flex:1;min-width:0;}
+.job-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
+.src-badge{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800;}
+.posted{color:var(--ink-m);font-size:11px;}
+.job-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:3px;line-height:1.3;}
+.job-company{color:var(--blue);font-size:12px;font-weight:700;margin-bottom:5px;}
+.job-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.job-tag{color:var(--ink-m);font-size:12px;}
+.job-tag.salary{color:var(--green);font-weight:700;}
+.job-tag.type{color:#6b4da6;}
+.chevron{color:var(--ink-m);font-size:18px;transition:transform 0.2s;flex-shrink:0;margin-top:4px;line-height:1;}
+.job-card.open .chevron{transform:rotate(180deg);color:var(--gold);}
+.job-card-body{display:none;padding:0 16px 16px;border-top:1px dashed var(--border);}
+.job-card.open .job-card-body{display:block;}
+.job-desc{color:var(--ink-l);font-size:13px;line-height:1.7;margin:12px 0 10px;}
+.req-label{color:var(--ink-m);font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;}
+.req-list{padding-left:16px;}
+.req-list li{color:var(--ink-l);font-size:12px;line-height:1.8;}
+.apply-btn{display:inline-block;margin-top:12px;padding:9px 18px;border-radius:9px;background:linear-gradient(135deg,var(--gold),#a0721e);color:#fff;text-decoration:none;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;}
+
+/* ── INTERVIEW PAGE ── */
+.page-header{margin-bottom:18px;}
+.page-header h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;}
+.page-header p{color:var(--ink-m);font-size:13px;line-height:1.55;}
+.int-controls{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;align-items:center;margin-bottom:18px;}
+.int-controls::-webkit-scrollbar{display:none;}
+.int-role-btn{padding:7px 14px;border-radius:50px;border:1.5px solid var(--border);background:var(--ww);color:var(--ink-l);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:'Nunito',sans-serif;}
+.int-role-btn.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+.gen-btn{margin-left:auto;flex-shrink:0;padding:7px 16px;border-radius:50px;border:1.5px solid var(--green);background:var(--green-l);color:var(--green);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;}
+.gen-btn:disabled{opacity:0.4;}
+.faq-intro{background:var(--ww);border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:20px;display:flex;gap:10px;box-shadow:var(--shadow);}
+.faq-intro-icon{font-size:22px;flex-shrink:0;}
+.faq-intro h4{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;margin-bottom:4px;}
+.faq-intro p{color:var(--ink-m);font-size:12px;line-height:1.6;}
+.faq-cat-label{display:flex;align-items:center;gap:8px;margin:20px 0 10px;}
+.faq-cat-label span{font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-m);white-space:nowrap;}
+.faq-cat-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.faq-card{background:var(--ww);border:1.5px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow);}
+.faq-card.open{border-color:#c9b0e0;}
+.faq-q{padding:13px 15px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.faq-q-text{font-size:13px;font-weight:700;color:var(--ink);flex:1;line-height:1.4;}
+.faq-card.open .faq-q-text{color:var(--purple);}
+.faq-q-icon{color:var(--ink-m);font-size:14px;flex-shrink:0;transition:transform 0.2s;}
+.faq-card.open .faq-q-icon{transform:rotate(180deg);color:var(--purple);}
+.faq-a{display:none;padding:0 15px 15px;border-top:1px dashed var(--border);}
+.faq-card.open .faq-a{display:block;}
+.answer-tip{display:inline-block;margin:10px 0 8px;background:var(--purple-l);color:var(--purple);font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:20px;}
+.answer-body{color:var(--ink-l);font-size:13px;line-height:1.75;}
+.key-points{margin:8px 0 0 16px;}
+.key-points li{color:var(--ink-l);font-size:12px;line-height:1.85;}
+.dos-donts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.do-box{background:var(--green-l);border:1px solid #a8d5bc;padding:10px 12px;border-radius:8px;}
+.dont-box{background:var(--red-l);border:1px solid #f5c6c2;padding:10px 12px;border-radius:8px;}
+.do-box h5{color:var(--green);font-size:10px;font-weight:800;text-transform:uppercase;margin-bottom:6px;}
+.dont-box h5{color:var(--red);font-size:10px;font-weight:800;text-transform:uppercase;margin-bottom:6px;}
+.do-box li,.dont-box li{font-size:11px;line-height:1.8;color:var(--ink-l);}
+.pro-tip{background:var(--gold-l);border:1px solid var(--gold-m);border-radius:8px;padding:10px 12px;margin-top:10px;display:flex;gap:8px;}
+.pro-tip-icon{font-size:14px;flex-shrink:0;}
+.pro-tip p{color:#7a5c10;font-size:12px;line-height:1.6;}
+
+/* ── NOTES PAGE ── */
+.notes-actions{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.note-search{flex:1;min-width:120px;padding:9px 14px;border-radius:50px;border:1.5px solid var(--border);background:var(--ww);font-size:13px;font-family:'Nunito',sans-serif;color:var(--ink);outline:none;}
+.btn-add-note{padding:9px 16px;border-radius:50px;border:none;background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;}
+.btn-add-co{padding:9px 16px;border-radius:50px;border:1.5px solid var(--teal);background:var(--teal-l);color:var(--teal);font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;}
+.add-form{background:var(--ww);border:1.5px solid var(--teal);border-radius:14px;padding:16px;margin-bottom:16px;}
+.add-form-title{font-size:13px;font-weight:800;color:var(--teal);margin-bottom:12px;}
+.form-input{width:100%;padding:10px 14px;border-radius:9px;border:1.5px solid var(--border);background:var(--sand);font-size:13px;font-family:'Nunito',sans-serif;color:var(--ink);outline:none;margin-bottom:8px;}
+.form-textarea{width:100%;padding:10px 14px;border-radius:9px;border:1.5px solid var(--border);background:var(--sand);font-size:13px;font-family:'Nunito',sans-serif;color:var(--ink);outline:none;resize:vertical;min-height:70px;margin-bottom:8px;}
+.form-row{display:flex;gap:8px;margin-bottom:8px;}
+.form-row .form-input{margin-bottom:0;flex:1;}
+.form-select{flex:1;padding:10px 14px;border-radius:9px;border:1.5px solid var(--border);background:var(--sand);font-size:13px;font-family:'Nunito',sans-serif;color:var(--ink);outline:none;}
+.form-btns{display:flex;gap:8px;margin-top:4px;}
+.btn-cancel{padding:9px 16px;border-radius:9px;border:1.5px solid var(--border);background:var(--sand);font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif;}
+.btn-save{padding:9px 20px;border-radius:9px;border:none;background:var(--teal);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;}
+.section-title{display:flex;align-items:center;gap:8px;margin:20px 0 10px;}
+.section-title span{font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-m);white-space:nowrap;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.note-card{background:var(--ww);border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;position:relative;box-shadow:var(--shadow);}
+.note-card.pinned{border-color:var(--gold-m);background:linear-gradient(135deg,#fffdf6,var(--ww));}
+.note-pin-badge{position:absolute;top:10px;right:12px;font-size:13px;}
+.note-card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
+.note-title{font-size:14px;font-weight:700;color:var(--ink);flex:1;}
+.note-btns{display:flex;gap:4px;flex-shrink:0;}
+.note-btn{background:none;border:none;cursor:pointer;font-size:15px;padding:3px;border-radius:6px;}
+.note-body{color:var(--ink-l);font-size:13px;line-height:1.7;margin-bottom:8px;}
+.note-footer{display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px dashed var(--border);}
+.note-date{color:var(--ink-m);font-size:10px;}
+.note-tag-badge{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+.company-card{background:var(--ww);border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:var(--shadow);}
+.company-row{display:flex;gap:10px;align-items:flex-start;}
+.company-icon{width:36px;height:36px;border-radius:10px;background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.company-info{flex:1;min-width:0;}
+.company-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.company-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:3px;}
+.company-meta span{font-size:12px;color:var(--ink-l);}
+.company-actions{display:flex;gap:4px;flex-shrink:0;}
+.status-btn{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:'Nunito',sans-serif;}
+.empty-state{text-align:center;padding:30px 0;color:var(--ink-m);}
+.empty-icon{font-size:32px;margin-bottom:8px;}
+.empty-title{font-size:13px;font-weight:700;color:var(--ink-l);margin-bottom:4px;}
+.empty-sub{font-size:12px;}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--ww);border-top:1px solid var(--border);display:flex;z-index:100;box-shadow:0 -4px 20px rgba(28,26,23,0.08);}
+.bn-btn{flex:1;padding:8px 0 10px;border:none;background:transparent;color:var(--ink-m);font-size:10px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:'Nunito',sans-serif;}
+.bn-btn.active{color:var(--gold);}
+.bn-icon{font-size:20px;line-height:1;}
+
+/* ── SPINNER PURPLE ── */
+.spinner-purple{border-color:var(--purple-l);border-top-color:var(--purple);}
+
+@media(min-width:700px){
+  .bottom-nav{display:none;}
+  body{padding-bottom:20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- API KEY BANNER -->
+<div class="api-banner" id="apiBanner">
+  <div class="api-banner-label">🔑 Enter your Anthropic API Key to start</div>
+  <div class="api-banner-row">
+    <input class="api-banner-input" id="apiInput" type="password" placeholder="sk-ant-..." autocomplete="off" onkeydown="if(event.key==='Enter')saveKey()"/>
+    <button class="api-banner-btn" onclick="saveKey()">Save &amp; Start</button>
+  </div>
+  <div class="api-saved" id="apiSaved">✓ Key saved! Loading jobs…</div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-top">
+    <div class="logo">🇦🇪</div>
+    <div>
+      <div class="header-title">UAE <span>Finance</span> Jobs</div>
+      <div class="header-sub">Tax · Finance · Accounting · Dubai · Abu Dhabi · Sharjah</div>
+    </div>
+  </div>
+  <nav class="top-nav">
+    <button class="top-nav-btn active" onclick="showPage('jobs',this)">💼 Job Listings</button>
+    <button class="top-nav-btn" onclick="showPage('interview',this)">🎯 Interview Prep</button>
+    <button class="top-nav-btn" onclick="showPage('notes',this)">📝 My Notes</button>
+  </nav>
+</header>
+
+<!-- ROLE TABS (jobs only) -->
+<div class="role-bar" id="roleBar">
+  <button class="role-tab active" onclick="selectRole('tax',this)">📊 Tax Specialist</button>
+  <button class="role-tab" onclick="selectRole('afm',this)">💼 Asst. Finance Mgr</button>
+  <button class="role-tab" onclick="selectRole('sa',this)">🏦 Senior Accountant</button>
+  <button class="refresh-btn" id="refreshBtn" onclick="loadJobs()">⟳ Refresh</button>
+</div>
+
+<!-- SOURCES (jobs only) -->
+<div class="sources-bar" id="sourcesBar">
+  <span class="src-label">Sources:</span>
+  <span class="src-pill" style="background:#e8f0fb;color:#0A66C2">LinkedIn</span>
+  <span class="src-pill" style="background:#e8eaf8;color:#003A9B">Indeed</span>
+  <span class="src-pill" style="background:#fef3e2;color:#c27a00">GulfTalent</span>
+  <span class="src-pill" style="background:#fdecea;color:#C0392B">Bayt</span>
+  <span class="src-pill" style="background:#e8f5e9;color:#2e7d32">Naukrigulf</span>
+  <span class="src-pill" style="background:#f3e8ff;color:#6b21a8">Glassdoor</span>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- JOBS PAGE -->
+  <div class="page active" id="page-jobs">
+    <div id="jobStatus"></div>
+    <div id="jobContent">
+      <div class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Enter your API key above to start</div>
+        <div class="loading-sub">Get your key at console.anthropic.com</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERVIEW PAGE -->
+  <div class="page" id="page-interview">
+    <div class="page-header">
+      <h2>Interview Prep <span style="color:var(--purple)">& FAQ</span></h2>
+      <p>Tailored questions, model answers, do's & don'ts, and UAE-specific tips.</p>
+    </div>
+    <div class="int-controls">
+      <button class="int-role-btn active" onclick="selectIntRole('tax',this)">📊 Tax Specialist</button>
+      <button class="int-role-btn" onclick="selectIntRole('afm',this)">💼 Asst. Finance Mgr</button>
+      <button class="int-role-btn" onclick="selectIntRole('sa',this)">🏦 Senior Accountant</button>
+      <button class="gen-btn" id="genBtn" onclick="generateFAQ()">✦ Generate</button>
+    </div>
+    <div id="faqContent">
+      <div class="empty-state">
+        <div class="empty-icon">🎯</div>
+        <div class="empty-title">Ready to Prepare?</div>
+        <div class="empty-sub">Choose a role and tap Generate.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTES PAGE -->
+  <div class="page" id="page-notes">
+    <div class="page-header">
+      <h2>My <span style="color:var(--teal)">Notes</span></h2>
+      <p>Track thoughts, companies and your interview pipeline.</p>
+    </div>
+    <div class="notes-actions">
+      <input class="note-search" id="noteSearch" type="text" placeholder="🔍 Search notes…" oninput="renderNotes()"/>
+      <button class="btn-add-note" onclick="toggleNoteForm()">✏️ Add Note</button>
+      <button class="btn-add-co" onclick="toggleCoForm()">🏢 Log Company</button>
+    </div>
+
+    <!-- Add Note Form -->
+    <div class="add-form" id="noteForm" style="display:none">
+      <div class="add-form-title">✏️ New Note</div>
+      <input class="form-input" id="nTitle" placeholder="Title (optional)"/>
+      <textarea class="form-textarea" id="nBody" placeholder="Write anything…"></textarea>
+      <div class="form-row">
+        <select class="form-select" id="nTag">
+          <option value="general">📝 General</option>
+          <option value="reminder">🔔 Reminder</option>
+          <option value="question">❓ Question</option>
+          <option value="idea">💡 Idea</option>
+        </select>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;flex-shrink:0">
+          <input type="checkbox" id="nPin" style="width:16px;height:16px;accent-color:var(--gold)"> Pin
+        </label>
+      </div>
+      <div class="form-btns">
+        <button class="btn-cancel" onclick="toggleNoteForm()">Cancel</button>
+        <button class="btn-save" onclick="saveNote()">Save Note</button>
+      </div>
+    </div>
+
+    <!-- Add Company Form -->
+    <div class="add-form" id="coForm" style="display:none">
+      <div class="add-form-title">🏢 Log Company / Interview</div>
+      <input class="form-input" id="cName" placeholder="Company name *"/>
+      <div class="form-row">
+        <input class="form-input" id="cRole" placeholder="Role / Position"/>
+        <input class="form-input" id="cContact" placeholder="Contact"/>
+      </div>
+      <div class="form-row">
+        <input class="form-input" id="cDate" type="date"/>
+        <select class="form-select" id="cStatus">
+          <option value="called">📞 Called Me</option>
+          <option value="scheduled">📅 Scheduled</option>
+          <option value="done">✅ Done</option>
+          <option value="offer">🎉 Offer</option>
+          <option value="rejected">❌ Rejected</option>
+        </select>
+      </div>
+      <textarea class="form-textarea" id="cNotes" placeholder="Notes — salary, interviewer, next steps…" style="min-height:55px"></textarea>
+      <div class="form-btns">
+        <button class="btn-cancel" onclick="toggleCoForm()">Cancel</button>
+        <button class="btn-save" onclick="saveCompany()">Save Entry</button>
+      </div>
+    </div>
+
+    <div id="notesList"></div>
+    <div id="companiesList"></div>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="bn-btn active" id="bn-jobs" onclick="showPage('jobs',null,'jobs')">
+    <span class="bn-icon">💼</span>Jobs
+  </button>
+  <button class="bn-btn" id="bn-interview" onclick="showPage('interview',null,'interview')">
+    <span class="bn-icon">🎯</span>Interview
+  </button>
+  <button class="bn-btn" id="bn-notes" onclick="showPage('notes',null,'notes')">
+    <span class="bn-icon">📝</span>Notes
+  </button>
+</nav>
+
+<script>
+// ── STATE ──
+let API_KEY = '';
+let currentRole = 'tax';
+let currentIntRole = 'tax';
+let notes = JSON.parse(localStorage.getItem('uae_notes')||'[]');
+let companies = JSON.parse(localStorage.getItem('uae_cos')||'[]');
+
+const ROLE_LABELS = {
+  tax:'Tax Specialist / Tax Manager',
+  afm:'Assistant Finance Manager',
+  sa:'Senior Accountant'
+};
+const SRC_STYLES = {
+  LinkedIn:{bg:'#e8f0fb',color:'#0A66C2'},
+  Indeed:{bg:'#e8eaf8',color:'#003A9B'},
+  GulfTalent:{bg:'#fef3e2',color:'#c27a00'},
+  Bayt:{bg:'#fdecea',color:'#C0392B'},
+  Naukrigulf:{bg:'#e8f5e9',color:'#2e7d32'},
+  Glassdoor:{bg:'#f3e8ff',color:'#6b21a8'},
+  Unknown:{bg:'#f0f0f0',color:'#666'}
+};
+const TAG_STYLES = {
+  general:{bg:'#f0f0f0',color:'#555',label:'📝 General'},
+  reminder:{bg:'#fff3cd',color:'#856404',label:'🔔 Reminder'},
+  question:{bg:'#d6e8f5',color:'#1a5276',label:'❓ Question'},
+  idea:{bg:'#f5e6c8',color:'#7a5c10',label:'💡 Idea'}
+};
+const STATUS_STYLES = {
+  called:{bg:'#fff3cd',color:'#856404',label:'📞 Called'},
+  scheduled:{bg:'#d6e8f5',color:'#1a5276',label:'📅 Scheduled'},
+  done:{bg:'#d4edde',color:'#1a6644',label:'✅ Done'},
+  offer:{bg:'#d4edda',color:'#155724',label:'🎉 Offer'},
+  rejected:{bg:'#fde8e8',color:'#c0392b',label:'❌ Rejected'}
+};
+const STATUS_ORDER = ['called','scheduled','done','offer','rejected'];
+
+// ── API KEY ──
+function saveKey(){
+  const val = document.getElementById('apiInput').value.trim();
+  if(!val){ alert('Please enter your API key.'); return; }
+  API_KEY = val;
+  document.getElementById('apiSaved').style.display = 'block';
+  setTimeout(()=>{
+    document.getElementById('apiBanner').classList.add('hidden');
+  }, 1000);
+  loadJobs();
+}
+
+// ── CLAUDE API CALL ──
+async function callClaude(messages, maxTokens=4000){
+  const res = await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':API_KEY,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
+    },
+    body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:maxTokens,messages})
+  });
+  const data = await res.json();
+  if(data.error) throw new Error(data.error.message||'API Error');
+  return (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+}
+
+// ── PAGE NAV ──
+function showPage(page, btn, bnKey){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.top-nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.querySelectorAll('.bn-btn').forEach(b=>b.classList.remove('active'));
+  const bnId = bnKey||page;
+  const bnBtn = document.getElementById('bn-'+bnId);
+  if(bnBtn) bnBtn.classList.add('active');
+  const isJobs = page==='jobs';
+  document.getElementById('roleBar').style.display = isJobs?'flex':'none';
+  document.getElementById('sourcesBar').style.display = isJobs?'flex':'none';
+  if(page==='notes') renderNotes();
+  // sync top nav active
+  document.querySelectorAll('.top-nav-btn').forEach(b=>{
+    const txt = b.textContent.toLowerCase();
+    if((page==='jobs'&&txt.includes('job'))||(page==='interview'&&txt.includes('interview'))||(page==='notes'&&txt.includes('note')))
+      b.classList.add('active');
+  });
+}
+
+// ── JOBS ──
+function selectRole(role,el){
+  currentRole = role;
+  document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  if(API_KEY) loadJobs();
+}
+
+async function loadJobs(){
+  if(!API_KEY){
+    document.getElementById('apiBanner').classList.remove('hidden');
+    return;
+  }
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true; btn.textContent = '⟳ Loading…';
+  document.getElementById('jobStatus').innerHTML = '';
+  document.getElementById('jobContent').innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      <div class="loading-text">Searching UAE job boards…</div>
+      <div class="loading-sub">This may take 15–20 seconds</div>
+    </div>`;
+  const label = ROLE_LABELS[currentRole];
+  try{
+    const controller = new AbortController();
+    const timer = setTimeout(()=>controller.abort(), 45000);
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST', signal:controller.signal,
+      headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:4000,messages:[{role:'user',content:
+        `Generate 12 realistic UAE job listings for "${label}" roles in Dubai, Abu Dhabi, Sharjah 2025. Use real UAE companies (ENOC,ADNOC,Emirates NBD,FAB,DP World,Majid Al Futtaim,PwC UAE,Deloitte ME,KPMG UAE,EY UAE,DEWA,Aldar,Emaar,Etisalat,Grant Thornton UAE). Return ONLY a raw JSON array, no markdown. Each object: title,company,location,source(LinkedIn/Indeed/GulfTalent/Bayt/Naukrigulf/Glassdoor),posted,salary(AED/month range),type,description(2-3 sentences),requirements(array of 4 strings),url.`
+      }]})
+    });
+    clearTimeout(timer);
+    const data = await res.json();
+    if(data.error) throw new Error(data.error.message);
+    const text = (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+    const m = text.match(/\[[\s\S]*\]/);
+    if(!m) throw new Error('No job data returned. Please try again.');
+    renderJobs(JSON.parse(m[0]), label);
+  }catch(e){
+    const msg = e.name==='AbortError'?'Request timed out. Check your internet connection.':esc(e.message||'Unknown error');
+    document.getElementById('jobContent').innerHTML = `
+      <div class="error-box">
+        <strong>Could not load jobs.</strong>
+        <span class="error-msg">${msg}</span>
+        <button class="retry-btn" onclick="loadJobs()">Try Again</button>
+      </div>`;
+  }finally{
+    btn.disabled=false; btn.textContent='⟳ Refresh';
+  }
+}
+
+function renderJobs(jobs, label){
+  document.getElementById('jobStatus').innerHTML = `
+    <div class="status-bar">✓ Found ${jobs.length} ${label} roles · Updated ${new Date().toLocaleTimeString()}</div>`;
+  const html = jobs.map((job,i)=>{
+    const s = SRC_STYLES[job.source]||SRC_STYLES.Unknown;
+    const reqs = (job.requirements||[]).map(r=>`<li>${esc(r)}</li>`).join('');
+    return `
+    <div class="job-card" id="jcard-${i}">
+      <div class="job-card-head" onclick="toggleJob(${i})">
+        <div class="job-card-head-left">
+          <div class="job-meta">
+            <span class="src-badge" style="background:${s.bg};color:${s.color}">${esc(job.source)}</span>
+            ${job.posted?`<span class="posted">${esc(job.posted)}</span>`:''}
+          </div>
+          <div class="job-title">${esc(job.title)}</div>
+          <div class="job-company">${esc(job.company)}</div>
+          <div class="job-tags">
+            ${job.location?`<span class="job-tag">📍 ${esc(job.location)}</span>`:''}
+            ${job.salary?`<span class="job-tag salary">💰 ${esc(job.salary)}</span>`:''}
+            ${job.type?`<span class="job-tag type">🕐 ${esc(job.type)}</span>`:''}
+          </div>
+        </div>
+        <div class="chevron">▾</div>
+      </div>
+      <div class="job-card-body">
+        ${job.description?`<p class="job-desc">${esc(job.description)}</p>`:''}
+        ${reqs?`<div class="req-label">Requirements</div><ul class="req-list">${reqs}</ul>`:''}
+        ${job.url?`<a class="apply-btn" href="${esc(job.url)}" target="_blank" rel="noopener">View & Apply →</a>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('jobContent').innerHTML = `<div class="jobs-list">${html}</div>`;
+}
+
+function toggleJob(i){
+  document.getElementById('jcard-'+i).classList.toggle('open');
+}
+
+// ── INTERVIEW ──
+function selectIntRole(role,el){
+  currentIntRole = role;
+  document.querySelectorAll('.int-role-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+async function generateFAQ(){
+  if(!API_KEY){ document.getElementById('apiBanner').classList.remove('hidden'); return; }
+  const btn = document.getElementById('genBtn');
+  btn.disabled=true; btn.textContent='⟳ Generating…';
+  const label = ROLE_LABELS[currentIntRole];
+  document.getElementById('faqContent').innerHTML = `
+    <div class="loading">
+      <div class="spinner spinner-purple"></div>
+      <div class="loading-text" style="color:var(--purple)">Generating for ${esc(label)}…</div>
+      <div class="loading-sub">Tailored for UAE finance market</div>
+    </div>`;
+  try{
+    const text = await callClaude([{role:'user',content:
+      `You are a senior UAE finance recruiter with 15+ years experience. Generate an interview prep guide for "${label}" as JSON:
+{"role":"${label}","intro":"2-sentence overview","categories":[{"name":"Category","icon":"emoji","questions":[{"question":"Q?","answer":"4-5 sentence model answer specific to UAE","keyPoints":["pt1","pt2","pt3"],"dos":["do1","do2","do3"],"donts":["dont1","dont2","dont3"],"proTip":"UAE-specific tip"}]}]}
+5 categories, 3 questions each:
+1. "Technical & Role-Specific" 🔧
+2. "UAE Regulatory & Compliance" 🏛️ (VAT 5%, Corp Tax 9%, IFRS, DIFC/ADGM)
+3. "Behavioural & Situational" 💬 (STAR method)
+4. "Leadership & Teamwork" 👥
+5. "Career Goals & Salary" 🎯
+Mention SAP/Oracle/Tally where relevant. ONLY raw JSON, no markdown.`
+    }],4500);
+    const m = text.match(/\{[\s\S]*\}/);
+    if(!m) throw new Error('No data');
+    renderFAQ(JSON.parse(m[0]));
+  }catch(e){
+    document.getElementById('faqContent').innerHTML = `
+      <div class="error-box"><strong>Could not generate questions.</strong><br>
+      <button class="retry-btn" onclick="generateFAQ()">Try Again</button></div>`;
+  }finally{
+    btn.disabled=false; btn.textContent='✦ Generate';
+  }
+}
+
+function renderFAQ(data){
+  let html = `
+    <div class="faq-intro">
+      <div class="faq-intro-icon">💡</div>
+      <div>
+        <h4>What UAE interviewers look for: ${esc(data.role)}</h4>
+        <p>${esc(data.intro)}</p>
+      </div>
+    </div>`;
+  (data.categories||[]).forEach((cat,ci)=>{
+    html += `<div class="faq-cat-label"><span>${esc(cat.icon||'📌')} ${esc(cat.name)}</span></div>`;
+    (cat.questions||[]).forEach((q,qi)=>{
+      const id = `faq-${ci}-${qi}`;
+      const kpts = (q.keyPoints||[]).map(p=>`<li>${esc(p)}</li>`).join('');
+      const dos = (q.dos||[]).map(d=>`<li>✓ ${esc(d)}</li>`).join('');
+      const donts = (q.donts||[]).map(d=>`<li>✗ ${esc(d)}</li>`).join('');
+      html += `
+        <div class="faq-card" id="${id}">
+          <div class="faq-q" onclick="toggleFAQ('${id}')">
+            <div class="faq-q-text">${esc(q.question)}</div>
+            <div class="faq-q-icon">▾</div>
+          </div>
+          <div class="faq-a">
+            <div class="answer-tip">✦ Model Answer</div>
+            <div class="answer-body">${esc(q.answer)}</div>
+            ${kpts?`<ul class="key-points">${kpts}</ul>`:''}
+            <div class="dos-donts">
+              <div class="do-box"><h5>✅ Do</h5><ul style="padding-left:12px">${dos}</ul></div>
+              <div class="dont-box"><h5>🚫 Don't</h5><ul style="padding-left:12px">${donts}</ul></div>
+            </div>
+            ${q.proTip?`<div class="pro-tip"><div class="pro-tip-icon">⭐</div><p><strong>UAE Pro Tip:</strong> ${esc(q.proTip)}</p></div>`:''}
+          </div>
+        </div>`;
+    });
+  });
+  document.getElementById('faqContent').innerHTML = html;
+}
+
+function toggleFAQ(id){ document.getElementById(id).classList.toggle('open'); }
+
+// ── NOTES ──
+function toggleNoteForm(){
+  const f = document.getElementById('noteForm');
+  f.style.display = f.style.display==='none'?'block':'none';
+  document.getElementById('coForm').style.display='none';
+}
+function toggleCoForm(){
+  const f = document.getElementById('coForm');
+  f.style.display = f.style.display==='none'?'block':'none';
+  document.getElementById('noteForm').style.display='none';
+}
+
+function saveNote(){
+  const body = document.getElementById('nBody').value.trim();
+  if(!body){ alert('Please write something.'); return; }
+  const note = {
+    id:Date.now(),
+    title:document.getElementById('nTitle').value.trim()||'Untitled Note',
+    body, tag:document.getElementById('nTag').value,
+    pinned:document.getElementById('nPin').checked,
+    date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})
+  };
+  notes.unshift(note);
+  notes.sort((a,b)=>b.pinned-a.pinned);
+  saveData();
+  document.getElementById('nTitle').value='';
+  document.getElementById('nBody').value='';
+  document.getElementById('nPin').checked=false;
+  document.getElementById('noteForm').style.display='none';
+  renderNotes();
+}
+
+function saveCompany(){
+  const name = document.getElementById('cName').value.trim();
+  if(!name){ alert('Please enter company name.'); return; }
+  const co = {
+    id:Date.now(), name,
+    role:document.getElementById('cRole').value.trim(),
+    contact:document.getElementById('cContact').value.trim(),
+    date:document.getElementById('cDate').value,
+    status:document.getElementById('cStatus').value,
+    notes:document.getElementById('cNotes').value.trim(),
+    added:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})
+  };
+  companies.unshift(co);
+  saveData();
+  ['cName','cRole','cContact','cNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cDate').value='';
+  document.getElementById('coForm').style.display='none';
+  renderNotes();
+}
+
+function deleteNote(id){ if(confirm('Delete this note?')){ notes=notes.filter(n=>n.id!==id); saveData(); renderNotes(); }}
+function deleteCompany(id){ if(confirm('Remove this entry?')){ companies=companies.filter(c=>c.id!==id); saveData(); renderNotes(); }}
+function togglePin(id){ const n=notes.find(n=>n.id===id); if(n){ n.pinned=!n.pinned; notes.sort((a,b)=>b.pinned-a.pinned); saveData(); renderNotes(); }}
+function cycleStatus(id){ const co=companies.find(c=>c.id===id); if(co){ const i=STATUS_ORDER.indexOf(co.status); co.status=STATUS_ORDER[(i+1)%STATUS_ORDER.length]; saveData(); renderNotes(); }}
+function saveData(){ localStorage.setItem('uae_notes',JSON.stringify(notes)); localStorage.setItem('uae_cos',JSON.stringify(companies)); }
+
+function renderNotes(){
+  const q = (document.getElementById('noteSearch').value||'').toLowerCase();
+  const fn = q ? notes.filter(n=>(n.title||'').toLowerCase().includes(q)||(n.body||'').toLowerCase().includes(q)) : notes;
+  const fc = q ? companies.filter(c=>(c.name||'').toLowerCase().includes(q)||(c.role||'').toLowerCase().includes(q)) : companies;
+
+  // Notes
+  let nh = `<div class="section-title"><span>📝 Notes (${fn.length})</span></div>`;
+  if(fn.length===0){
+    nh += `<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-title">No notes yet</div><div class="empty-sub">Tap Add Note to get started.</div></div>`;
+  } else {
+    fn.forEach(n=>{
+      const ts = TAG_STYLES[n.tag]||TAG_STYLES.general;
+      nh += `
+        <div class="note-card${n.pinned?' pinned':''}">
+          ${n.pinned?'<span class="note-pin-badge">📌</span>':''}
+          <div class="note-card-header">
+            <div class="note-title">${esc(n.title)}</div>
+            <div class="note-btns">
+              <button class="note-btn" onclick="togglePin(${n.id})">${n.pinned?'📌':'📍'}</button>
+              <button class="note-btn" onclick="deleteNote(${n.id})">🗑️</button>
+            </div>
+          </div>
+          <div class="note-body">${esc(n.body)}</div>
+          <div class="note-footer">
+            <span class="note-date">${n.date}</span>
+            <span class="note-tag-badge" style="background:${ts.bg};color:${ts.color}">${ts.label}</span>
+          </div>
+        </div>`;
+    });
+  }
+  document.getElementById('notesList').innerHTML = nh;
+
+  // Companies
+  let ch = `<div class="section-title"><span>🏢 Interview Tracker (${fc.length})</span></div>`;
+  if(fc.length===0){
+    ch += `<div class="empty-state"><div class="empty-icon">🏢</div><div class="empty-title">No companies tracked</div><div class="empty-sub">Tap Log Company to track interviews.</div></div>`;
+  } else {
+    fc.forEach(co=>{
+      const st = STATUS_STYLES[co.status]||STATUS_STYLES.called;
+      ch += `
+        <div class="company-card">
+          <div class="company-row">
+            <div class="company-icon">🏢</div>
+            <div class="company-info">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                <div class="company-name">${esc(co.name)}</div>
+                <div class="company-actions">
+                  <button class="status-btn" style="background:${st.bg};color:${st.color}" onclick="cycleStatus(${co.id})">${st.label}</button>
+                  <button class="note-btn" onclick="deleteCompany(${co.id})">🗑️</button>
+                </div>
+              </div>
+              <div class="company-meta">
+                ${co.role?`<span style="color:var(--blue);font-weight:700">${esc(co.role)}</span>`:''}
+                ${co.contact?`<span>${esc(co.contact)}</span>`:''}
+                ${co.date?`<span>📅 ${co.date}</span>`:''}
+              </div>
+              ${co.notes?`<div style="font-size:12px;color:var(--ink-l);margin-top:6px;line-height:1.6">${esc(co.notes)}</div>`:''}
+              <div style="font-size:10px;color:var(--ink-m);margin-top:5px">Added ${co.added}</div>
+            </div>
+          </div>
+        </div>`;
+    });
+  }
+  document.getElementById('companiesList').innerHTML = ch;
+}
+
+function esc(str){ if(!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── INIT ──
+renderNotes();
+</script>
+</body>
+</html>
